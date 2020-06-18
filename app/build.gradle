@@ -74,6 +74,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     // Koin
     def koinVersion = '2.1.5'
