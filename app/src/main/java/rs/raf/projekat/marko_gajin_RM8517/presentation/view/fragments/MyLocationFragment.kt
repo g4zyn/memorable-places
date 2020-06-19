@@ -15,7 +15,7 @@ import rs.raf.projekat.marko_gajin_RM85.R
 import timber.log.Timber
 
 
-class MyLocationFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback {
+class MyLocationFragment : Fragment(R.layout.fragment_maps) {
 
     private val markLocation = OnMapReadyCallback { googleMap ->
         setMapStyle(googleMap)
@@ -36,11 +36,7 @@ class MyLocationFragment : Fragment(R.layout.fragment_maps), OnMapReadyCallback 
 
     private fun initMap() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
-    }
-
-    override fun onMapReady(googleMap: GoogleMap?) {
-        setMapStyle(googleMap)
+        mapFragment?.getMapAsync(markLocation)
     }
 
     private fun setMapStyle(googleMap: GoogleMap?) {
