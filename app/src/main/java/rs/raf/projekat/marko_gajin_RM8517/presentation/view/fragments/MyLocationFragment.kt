@@ -58,7 +58,22 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
 
     private fun initBottomSheet() {
         var bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        bottomSheet.setOnClickListener {
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                headerBtn.rotation = slideOffset * 180
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+        })
     }
 
     private fun setMapStyle(googleMap: GoogleMap?) {
