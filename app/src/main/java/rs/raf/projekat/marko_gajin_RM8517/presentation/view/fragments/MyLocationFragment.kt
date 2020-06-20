@@ -1,32 +1,38 @@
 package rs.raf.projekat.marko_gajin_RM8517.presentation.view.fragments
 
+import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
+import android.location.Location
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_home_sheet.*
-import kotlinx.android.synthetic.main.fragment_my_location.*
 import rs.raf.projekat.marko_gajin_RM85.R
 import timber.log.Timber
 
-
 class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
 
-    private val markLocation = OnMapReadyCallback { googleMap ->
-        setMapStyle(googleMap)
+    companion object {
+        private const val LOCATION_PERMISSION_REQ_CODE = 1
+    }
 
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    private var mMap: GoogleMap? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var lastLocation: Location
+
+    private val setMap = OnMapReadyCallback { googleMap ->
+        mMap = googleMap
+        setMapStyle()
+        getDeviceLocation()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +48,6 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
     private fun initUi() {
         initMap()
         initBottomSheet()
-        initListeners()
     }
 
     private fun initListeners() {
@@ -52,12 +57,13 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
     }
 
     private fun initMap() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(markLocation)
+        mapFragment?.getMapAsync(setMap)
     }
 
     private fun initBottomSheet() {
-        var bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 
         bottomSheet.setOnClickListener {
             if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -71,14 +77,37 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 headerBtn.rotation = slideOffset * 180
             }
-
             override fun onStateChanged(bottomSheet: View, newState: Int) {}
         })
     }
 
-    private fun setMapStyle(googleMap: GoogleMap?) {
+    private fun getDeviceLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQ_CODE)
+            return
+        }
+        mMap?.isMyLocationEnabled = true
+
+        fusedLocationClient.lastLocation.addOnSuccessListener(requireActivity()) {location -> markLocation(location)}
+    }
+
+    private val markLocation = { location: Location ->
+        lastLocation = location
+        val currentLocation = LatLng(location.latitude, location.longitude)
+        placeMarkerOnMap(currentLocation)
+        mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12f))
+    }
+
+    private fun placeMarkerOnMap(location: LatLng) {
+        val markerOptions = MarkerOptions().position(location)
+        mMap?.addMarker(markerOptions)
+    }
+
+    private fun setMapStyle() {
         try {
-            val success = googleMap?.setMapStyle(
+            val success = mMap?.setMapStyle(
                 MapStyleOptions.loadRawResourceStyle(
                     context, R.raw.mapstyle
                 )

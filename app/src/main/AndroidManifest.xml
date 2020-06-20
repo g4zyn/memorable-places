@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rs.raf.projekat.marko_gajin_RM85">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name="rs.raf.projekat.marko_gajin_RM8517.application.MemorablePlacesApp"
@@ -16,7 +17,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBnm7DOyt268mKz_kgNfFDsxBplBZgtY8g" />
+            android:value="AIzaSyAzartp3JZ9awrD_rym426ZzK9cki6TOkw" />
 
         <activity android:name="rs.raf.projekat.marko_gajin_RM8517.presentation.view.activities.MainActivity" />
         <activity android:name="rs.raf.projekat.marko_gajin_RM8517.presentation.view.activities.SplashActivity">
