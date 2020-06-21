@@ -14,6 +14,9 @@ abstract class LocationDao {
     @Query("SELECT * FROM places")
     abstract fun getAll(): Observable<List<LocationEntity>>
 
+    @Query("SELECT * FROM places WHERE id == :id")
+    abstract fun getById(id: Long): LocationEntity
+
     @Query("SELECT * FROM places WHERE name LIKE :search || '%' or description LIKE :search || '%'")
     abstract fun getBySearch(search: String): Observable<List<LocationEntity>>
 
