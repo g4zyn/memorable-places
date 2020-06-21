@@ -16,7 +16,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.layout_home_sheet.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import rs.raf.projekat.marko_gajin_RM85.R
+import rs.raf.projekat.marko_gajin_RM8517.data.models.Place
+import rs.raf.projekat.marko_gajin_RM8517.presentation.contracts.PlaceContract
+import rs.raf.projekat.marko_gajin_RM8517.presentation.viewmodels.PlaceViewModel
 import timber.log.Timber
 
 class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
@@ -24,6 +28,8 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
     companion object {
         private const val LOCATION_PERMISSION_REQ_CODE = 1
     }
+
+    private val placeViewModel: PlaceContract.ViewModel by sharedViewModel<PlaceViewModel>()
 
     private var mMap: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -52,7 +58,16 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
 
     private fun initListeners() {
         saveBtn.setOnClickListener {
-//            TODO  save place
+            val name = nameInput.text.toString()
+            val description = descInput.text.toString()
+            val newPlace = Place(
+                0,
+                name,
+                description,
+                lastLocation.latitude,
+                lastLocation.longitude
+            )
+            placeViewModel.savePlace(newPlace)
         }
     }
 

@@ -9,7 +9,7 @@ import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import rs.raf.projekat.marko_gajin_RM8517.modules.coreModule
-import rs.raf.projekat.marko_gajin_RM8517.modules.locationModule
+import rs.raf.projekat.marko_gajin_RM8517.modules.placeModule
 import timber.log.Timber
 
 class MemorablePlacesApp : Application() {
@@ -32,7 +32,7 @@ class MemorablePlacesApp : Application() {
     private fun initKoin() {
         val modules = listOf(
             coreModule,
-            locationModule
+            placeModule
         )
         startKoin {
             androidLogger(Level.DEBUG)
