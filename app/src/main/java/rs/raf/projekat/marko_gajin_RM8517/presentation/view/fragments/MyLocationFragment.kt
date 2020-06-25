@@ -32,15 +32,11 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
 
     private val placeViewModel: PlaceContract.ViewModel by sharedViewModel<PlaceViewModel>()
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+
     private var mMap: GoogleMap? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
-
-    private val setMap = OnMapReadyCallback { googleMap ->
-        mMap = googleMap
-        setMapStyle()
-        getDeviceLocation()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,27 +45,12 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
 
     private fun init() {
         initUi()
-        initListeners()
     }
 
     private fun initUi() {
         initMap()
         initBottomSheet()
-    }
-
-    private fun initListeners() {
-        saveBtn.setOnClickListener {
-            val name = nameInput.text.toString()
-            val description = descInput.text.toString()
-            val newPlace = Place(
-                0,
-                name,
-                description,
-                lastLocation.latitude,
-                lastLocation.longitude
-            )
-            placeViewModel.savePlace(newPlace)
-        }
+        initListeners()
     }
 
     private fun initMap() {
@@ -78,23 +59,10 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
         mapFragment?.getMapAsync(setMap)
     }
 
-    private fun initBottomSheet() {
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-
-        bottomSheet.setOnClickListener {
-            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-        }
-
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                headerBtn.rotation = slideOffset * 180
-            }
-            override fun onStateChanged(bottomSheet: View, newState: Int) {}
-        })
+    private val setMap = OnMapReadyCallback { googleMap ->
+        mMap = googleMap
+        setMapStyle()
+        getDeviceLocation()
     }
 
     private fun getDeviceLocation() {
@@ -106,19 +74,52 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
         }
         mMap?.isMyLocationEnabled = true
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(requireActivity()) {location -> markLocation(location)}
+        fusedLocationClient.lastLocation.addOnSuccessListener(requireActivity()) { location -> markLocation(location) }
     }
 
     private val markLocation = { location: Location ->
         lastLocation = location
         val currentLocation = LatLng(location.latitude, location.longitude)
-        placeMarkerOnMap(currentLocation)
+        val markerOptions = MarkerOptions().position(currentLocation)
+        mMap?.addMarker(markerOptions)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12f))
     }
 
-    private fun placeMarkerOnMap(location: LatLng) {
-        val markerOptions = MarkerOptions().position(location)
-        mMap?.addMarker(markerOptions)
+    private fun initBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                headerBtn.rotation = slideOffset * 180
+            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+        })
+    }
+
+    private fun initListeners() {
+        bottomSheet.setOnClickListener { collapseBottomSheet(it) }
+        saveBtn.setOnClickListener { savePlace(it) }
+    }
+
+    private val collapseBottomSheet = { _: View ->
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private val savePlace = { _: View ->
+        val name = nameInput.text.toString()
+        val description = descInput.text.toString()
+        val newPlace = Place(
+            0,
+            name,
+            description,
+            lastLocation.latitude,
+            lastLocation.longitude
+        )
+        placeViewModel.savePlace(newPlace)
     }
 
     private fun setMapStyle() {
