@@ -11,6 +11,8 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
     />
 
-    <include layout="@layout/layout_places_sheet"/>
+    <include layout="@layout/layout_places_sheet" />
+
+    <include layout="@layout/layout_place_info" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/placeInfoSheet"
+    android:background="@android:color/background_dark"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" >
+
+    <TextView
+        android:id="@+id/nameTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Banovo Brdo"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/descTv"
+    />
+
+    <TextView
+        android:id="@+id/descTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Location"
+
+        app:layout_constraintStart_toStartOf="@id/nameTv"
+        app:layout_constraintTop_toBottomOf="@id/nameTv"
+        app:layout_constraintBottom_toTopOf="@id/editBtn"
+    />
+
+    <TextView
+        android:id="@+id/dateLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/saved"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/editBtn"
+        app:layout_constraintTop_toTopOf="@id/editBtn"
+    />
+
+    <TextView
+        android:id="@+id/dateTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thursday, 25 June"
+
+        app:layout_constraintStart_toStartOf="@id/dateLabel"
+        app:layout_constraintTop_toBottomOf="@id/dateLabel"
+        app:layout_constraintBottom_toBottomOf="@id/editBtn"
+    />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        style="@style/Widget.MaterialComponents.Button"
+
+        app:layout_constraintStart_toEndOf="@id/dateLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/descTv"
+        app:layout_constraintBottom_toTopOf="@+id/latLabel"
+    />
+
+    <TextView
+        android:id="@+id/latLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/latitude"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/longLabel"
+        app:layout_constraintBottom_toTopOf="@+id/latTv"
+    />
+
+    <TextView
+        android:id="@+id/latTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="@id/latLabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+    <TextView
+        android:id="@+id/longLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/latitude"
+
+        app:layout_constraintStart_toEndOf="@id/latLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/longTv"
+    />
+
+    <TextView
+        android:id="@+id/longTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="@id/longLabel"
+        app:layout_constraintBottom_toBottomOf="parent"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

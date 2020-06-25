@@ -21,4 +21,7 @@
     <string name="title">Title</string>
     <string name="name">Name</string>
     <string name="saved_places">Saved places</string>
+    <string name="latitude">Latitude</string>
+    <string name="edit">edit</string>
+    <string name="saved">Saved</string>
 </resources>

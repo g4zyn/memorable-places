@@ -6,7 +6,7 @@ import rs.raf.projekat.marko_gajin_RM8517.data.models.PlaceEntity
 
 @Database(
     entities = [PlaceEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class Database : RoomDatabase() {

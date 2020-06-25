@@ -80,7 +80,7 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
     private val markLocation = { location: Location ->
         lastLocation = location
         val currentLocation = LatLng(location.latitude, location.longitude)
-        val markerOptions = MarkerOptions().position(currentLocation)
+        val markerOptions = MarkerOptions().position(currentLocation).title("Current location")
         mMap?.addMarker(markerOptions)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12f))
     }
