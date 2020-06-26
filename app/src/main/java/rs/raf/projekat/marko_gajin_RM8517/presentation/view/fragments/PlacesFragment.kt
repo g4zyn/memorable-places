@@ -1,9 +1,11 @@
 package rs.raf.projekat.marko_gajin_RM8517.presentation.view.fragments
 
+import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import rs.raf.projekat.marko_gajin_RM85.R
 import rs.raf.projekat.marko_gajin_RM8517.data.models.Place
 import rs.raf.projekat.marko_gajin_RM8517.presentation.contracts.PlaceContract
+import rs.raf.projekat.marko_gajin_RM8517.presentation.view.activities.EditPlaceActivity
 import rs.raf.projekat.marko_gajin_RM8517.presentation.view.recycler.adapters.PlaceAdapter
 import rs.raf.projekat.marko_gajin_RM8517.presentation.view.states.PlacesState
 import rs.raf.projekat.marko_gajin_RM8517.presentation.viewmodels.PlaceViewModel
@@ -30,6 +33,8 @@ import timber.log.Timber
 class PlacesFragment : Fragment(R.layout.fragment_places) {
 
     private val placeViewModel: PlaceContract.ViewModel by sharedViewModel<PlaceViewModel>()
+
+    private lateinit var selectedPlace: Place
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var infoSheetBehavior: BottomSheetBehavior<View>
@@ -68,8 +73,8 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         mapFragment?.getMapAsync(setMap)
     }
 
-    private val setMap = OnMapReadyCallback { googleMap ->
-        mMap = googleMap
+    private val setMap = OnMapReadyCallback {
+        mMap = it
         setMapStyle()
     }
 
@@ -100,11 +105,26 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private val showPlace = { place: Place ->
         val location = LatLng(place.latitude, place.longitude)
         mMap?.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
-        showPlaceInfo(place)
+        selectedPlace = place
+        showPlaceInfo()
+    }
+
+    private fun showPlaceInfo() {
+        infoSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        nameTv.text = selectedPlace.name
+        descTv.text = selectedPlace.description
+        latTv.text = selectedPlace.latitude.toString()
+        longTv.text = selectedPlace.longitude.toString()
+
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun initListeners() {
         mMap?.setOnMarkerClickListener { showLocation(it) }
+        searchEt.doAfterTextChanged { placeViewModel.searchPlaces(it.toString()) }
+        editBtn.setOnClickListener { startEditActivity(it) }
+        closeBtn.setOnClickListener { closePlaceInfo(it) }
         bottomSheet.setOnClickListener { collapseBottomSheet(it) }
     }
 
@@ -117,22 +137,16 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         true
     }
 
-    private fun showPlaceInfo(place: Place) {
-        if (infoSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-            infoSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            nameTv.text = place.name
-            descTv.text = place.description
-            latTv.text = place.latitude.toString()
-            longTv.text = place.longitude.toString()
+    private val startEditActivity = { _: View ->
+        val intent = Intent(context, EditPlaceActivity::class.java)
+        placeViewModel.setPlaceData(selectedPlace, intent)
+        startActivity(intent)
+    }
 
-            bottomSheetBehavior.isHideable = true
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            bottomSheetBehavior.isHideable = false
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-        }
+    private val closePlaceInfo = { _: View ->
+        infoSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior.isHideable = false
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private val collapseBottomSheet = { _: View ->
@@ -147,8 +161,10 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
         when (state) {
             is PlacesState.Success -> {
                 showLoadingState(false)
-                adapter.submitList(state.places)
+//                closePlaceInfo()
+                mMap?.clear()
                 state.places.forEach { markLocation(it) }
+                adapter.submitList(state.places)
             }
             is PlacesState.Error -> {
                 showLoadingState(false)

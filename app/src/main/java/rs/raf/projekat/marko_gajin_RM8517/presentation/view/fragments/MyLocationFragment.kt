@@ -59,8 +59,8 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
         mapFragment?.getMapAsync(setMap)
     }
 
-    private val setMap = OnMapReadyCallback { googleMap ->
-        mMap = googleMap
+    private val setMap = OnMapReadyCallback {
+        mMap = it
         setMapStyle()
         getDeviceLocation()
     }
@@ -74,7 +74,7 @@ class MyLocationFragment : Fragment(R.layout.fragment_my_location) {
         }
         mMap?.isMyLocationEnabled = true
 
-        fusedLocationClient.lastLocation.addOnSuccessListener(requireActivity()) { location -> markLocation(location) }
+        fusedLocationClient.lastLocation.addOnSuccessListener(requireActivity()) { markLocation(it) }
     }
 
     private val markLocation = { location: Location ->

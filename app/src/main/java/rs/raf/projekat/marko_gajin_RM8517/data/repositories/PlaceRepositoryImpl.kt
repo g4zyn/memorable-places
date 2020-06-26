@@ -1,13 +1,16 @@
 package rs.raf.projekat.marko_gajin_RM8517.data.repositories
 
+import android.content.Intent
 import io.reactivex.Completable
 import io.reactivex.Observable
 import rs.raf.projekat.marko_gajin_RM8517.data.datasources.local.PlaceDao
+import rs.raf.projekat.marko_gajin_RM8517.data.datasources.shared.PlaceDataSource
 import rs.raf.projekat.marko_gajin_RM8517.data.models.Place
 import rs.raf.projekat.marko_gajin_RM8517.data.models.PlaceEntity
 
 class PlaceRepositoryImpl(
-    private val localDataSource: PlaceDao
+    private val localDataSource: PlaceDao,
+    private val sharedDataSource: PlaceDataSource
 ) : PlaceRepository {
 
     private val mapLocations = { entities: List<PlaceEntity> ->
@@ -46,5 +49,13 @@ class PlaceRepositoryImpl(
 
     override fun delete(place: Place): Completable {
         return localDataSource.delete(place.id)
+    }
+
+    override fun getPlaceData(intent: Intent): Place? {
+        return sharedDataSource.getPlaceData(intent)
+    }
+
+    override fun setPlaceData(place: Place, intent: Intent) {
+        sharedDataSource.setPlaceData(place, intent)
     }
 }

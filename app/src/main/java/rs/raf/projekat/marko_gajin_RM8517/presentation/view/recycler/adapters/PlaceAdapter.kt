@@ -17,9 +17,8 @@ class PlaceAdapter(
         val view = layoutInflater.inflate(R.layout.layout_place_item, parent, false)
 
         return PlaceViewHolder(
-            view,
-            { onLocationBtnClicked.invoke(getItem(it)) }
-        )
+            view
+        ) { onLocationBtnClicked.invoke(getItem(it)) }
     }
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
