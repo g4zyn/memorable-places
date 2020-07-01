@@ -36,43 +36,8 @@
         android:src="@drawable/ic_close_24"
 
         app:layout_constraintTop_toTopOf="@id/nameTv"
-        app:layout_constraintBottom_toTopOf="@id/editBtn"
+        app:layout_constraintBottom_toTopOf="@id/longLabel"
         app:layout_constraintEnd_toEndOf="parent"
-    />
-
-    <TextView
-        android:id="@+id/dateLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/saved"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/editBtn"
-        app:layout_constraintTop_toTopOf="@id/editBtn"
-    />
-
-    <TextView
-        android:id="@+id/dateTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Thursday, 25 June"
-
-        app:layout_constraintStart_toStartOf="@id/dateLabel"
-        app:layout_constraintTop_toBottomOf="@id/dateLabel"
-        app:layout_constraintBottom_toBottomOf="@id/editBtn"
-    />
-
-    <Button
-        android:id="@+id/editBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/edit"
-        style="@style/Widget.MaterialComponents.Button"
-
-        app:layout_constraintStart_toEndOf="@id/dateLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descTv"
-        app:layout_constraintBottom_toTopOf="@+id/latLabel"
     />
 
     <TextView
@@ -92,7 +57,7 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintStart_toStartOf="@id/latLabel"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/editBtn"
     />
 
     <TextView
@@ -112,6 +77,16 @@
         android:layout_height="wrap_content"
 
         app:layout_constraintStart_toStartOf="@id/longLabel"
+        app:layout_constraintBottom_toTopOf="@id/editBtn"
+    />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        style="@style/Widget.MaterialComponents.Button"
+
         app:layout_constraintBottom_toBottomOf="parent"
     />
 

@@ -123,7 +123,10 @@ class PlacesFragment : Fragment(R.layout.fragment_places) {
     private fun initListeners() {
         mMap?.setOnMarkerClickListener { showLocation(it) }
         searchEt.doAfterTextChanged { placeViewModel.searchPlaces(it.toString()) }
-        editBtn.setOnClickListener { startEditActivity(it) }
+        editBtn.setOnClickListener {
+            startEditActivity(it)
+            closePlaceInfo(it)
+        }
         closeBtn.setOnClickListener { closePlaceInfo(it) }
         bottomSheet.setOnClickListener { collapseBottomSheet(it) }
     }

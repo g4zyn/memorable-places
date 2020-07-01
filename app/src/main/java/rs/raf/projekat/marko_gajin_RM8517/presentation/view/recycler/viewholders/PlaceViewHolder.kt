@@ -27,6 +27,5 @@ class PlaceViewHolder(
     fun bind(place: Place) {
         itemName.text = place.name
         itemDesc.text = place.description
-        locationTv.text = "${place.latitude}, ${place.longitude}"
     }
 }

@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_location_24"
+            android:padding="10dp"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,18 +40,10 @@
 
             app:layout_constraintStart_toStartOf="@id/itemName"
             app:layout_constraintTop_toBottomOf="@id/itemName"
-            app:layout_constraintBottom_toTopOf="@id/locationTv"
-        />
-
-        <TextView
-            android:id="@+id/locationTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            app:layout_constraintStart_toStartOf="@id/itemName"
-            app:layout_constraintTop_toBottomOf="@id/itemDesc"
             app:layout_constraintBottom_toBottomOf="parent"
         />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
